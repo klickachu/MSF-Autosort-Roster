@@ -1,0 +1,86 @@
+// The numeric index of the column you wish to keep auto-sorted. 1 = Role, 2 = Alphabetical Character Name; Default is Role
+var SORT_COLUMN_INDEX;
+// Whether to sort the data in ascending or descending order.
+var ASCENDING = true;
+// Range of Roster to sort
+var sortRange = "Roster!A3:L82";
+// Keep track of the active sheet.
+var activeSheet;
+
+function autoSort(sheet) {
+  if (sheet.getName() !== "Roster") return;
+  var sortR = sheet.getRange("Roster!B1");
+  var sortOrder = sortR.getValue();
+  var range = sheet.getRange("Roster!A3:L82");
+  var rangeToCopy = sheet.getRange("Lookup!CJ2:CJ81");  
+  switch (sortOrder) {
+    case "Role":
+        SORT_COLUMN_INDEX =1;
+        ASCENDING=true;
+        break;
+    case "Character":
+        SORT_COLUMN_INDEX =2;
+        ASCENDING=true;
+        break;
+    case "Star - Ascending":
+        SORT_COLUMN_INDEX =5;
+        ASCENDING=true;
+        break;
+    case "Star - Decending":
+        SORT_COLUMN_INDEX =5;
+        ASCENDING=false;
+        break;
+    case "Level - Ascending":
+        SORT_COLUMN_INDEX =6;
+        ASCENDING=true;
+        break;
+    case "Level - Decending":
+        SORT_COLUMN_INDEX =6;
+        ASCENDING=false;
+        break;
+    case "Gear - Ascending":
+        SORT_COLUMN_INDEX =11;
+        ASCENDING=true;
+        break;
+    case "Gear - Decending":
+        SORT_COLUMN_INDEX =11;
+        ASCENDING=false;
+        break;
+    case "Power - Ascending":
+        SORT_COLUMN_INDEX =12;
+        ASCENDING=true;
+        break;
+    case "Power - Decending":
+        SORT_COLUMN_INDEX =12;
+        ASCENDING=false;
+  }
+  
+  range.sort( {
+    column: SORT_COLUMN_INDEX,
+	ascending: ASCENDING
+  })
+  rangeToCopy.copyTo(sheet.getRange("Roster!D3:D82"));
+}
+
+function onEdit(event) {
+  // Update the active sheet in case it changed.
+  activeSheet = SpreadsheetApp.getActiveSheet();
+  // Get the cell that was just modified.
+  editedCell = activeSheet.getActiveCell();
+  
+  // Only trigger a re-sort if the user edited Sort By cell on sheet Roster;
+  // otherwise, we perform unnecessary additional sorts if
+  // the targeted cell didn't change.
+  if (activeSheet.getName() !== "Roster" || editedCell.getA1Notation() !== "B1") return;
+
+  autoSort(activeSheet);
+}
+
+function onOpen(event) {
+  activeSheet = SpreadsheetApp.getActiveSheet();
+  autoSort(activeSheet);
+}
+
+function onInstall(event) {
+  onOpen(event);
+}
