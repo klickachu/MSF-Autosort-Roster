@@ -3,7 +3,7 @@ var SORT_COLUMN_INDEX;
 // Whether to sort the data in ascending or descending order.
 var ASCENDING = true;
 // Range of Roster to sort
-var sortRange = "Roster!A3:L82";
+var sortRange = "Roster!A3:L100";
 // Keep track of the active sheet.
 var activeSheet;
 
@@ -11,8 +11,8 @@ function autoSort(sheet) {
   if (sheet.getName() !== "Roster") return;
   var sortR = sheet.getRange("Roster!B1");
   var sortOrder = sortR.getValue();
-  var range = sheet.getRange("Roster!A3:L82");
-  var rangeToCopy = sheet.getRange("Lookup!CJ2:CJ81");  
+  var range = sheet.getRange("Roster!A3:L100");
+  var rangeToCopy = sheet.getRange("Lookup!CJ2:CJ99");  
   switch (sortOrder) {
     case "Role":
         SORT_COLUMN_INDEX =1;
@@ -59,7 +59,7 @@ function autoSort(sheet) {
     column: SORT_COLUMN_INDEX,
 	ascending: ASCENDING
   })
-  rangeToCopy.copyTo(sheet.getRange("Roster!D3:D82"));
+  rangeToCopy.copyTo(sheet.getRange("Roster!D3:D100"));
 }
 
 function onEdit(event) {
